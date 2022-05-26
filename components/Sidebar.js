@@ -1,9 +1,12 @@
 import React from 'react';
 import {HomeIcon,SearchIcon,LibraryIcon,PlusCircleIcon,RssIcon, HeartIcon} from '@heroicons/react/outline';
-import { signOut } from 'next-auth/react';
+import { signOut,useSession } from 'next-auth/react';
+
 
 
 const Sidebar = () => {
+  const {data : session,status}=useSession();
+  console.log(session);
   return (
     <div className="text-gray-500 p-5 text-sm border-r border-gray-500">
       <div className="space-y-4">
