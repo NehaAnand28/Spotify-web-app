@@ -37,7 +37,7 @@ const Center = () => {
         setPlaylist(data.body);
       })
       .catch((err) => console.log("Something went wrong", err));
-  }, [spotifyApi, playlistId]);
+  }, [spotifyApi, playlistId, setPlaylist]);
 
   console.log(playlist);
 
