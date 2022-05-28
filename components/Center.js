@@ -1,8 +1,11 @@
-import { ChevronDownIcon } from '@heroicons/react/outline';
-import { signOut, useSession } from "next-auth/react";  
+import { ChevronDownIcon } from "@heroicons/react/outline";
+import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import useSpotify from "../hooks/useSpotify";
 import { shuffle } from "lodash";
-import React from 'react'
+import { useRecoilState, useRecoilValue } from "recoil";
+import { playlistIdState, playlistState } from "../atoms/playlistAtom";
+import React from "react";
 
 const colors = [
   "from-indigo-500",
@@ -14,20 +17,27 @@ const colors = [
   "from-purple-500",
 ];
 
- 
-
-
 const Center = () => {
-    const { data: session } = useSession();
-    const [color, setColor] = useState(null);
+  const { data: session } = useSession();
+  const spotifyApi = useSpotify();
+  const [color, setColor] = useState(null);
+  const playlistId = useRecoilValue(playlistIdState);
+  const [playlist, setPlaylist] = useRecoilState(playlistState);
 
+  useEffect(() => {
+    setColor(shuffle(colors).pop());
+  }, [playlistId]);
 
+  useEffect(() => {
+    spotifyApi
+      .getPlaylist(playlistId)
+      .then((data) => {
+        setPlaylist(data.body);
+      })
+      .catch((err) => console.log("Something went wrong", err));
+  }, [spotifyApi, playlistId]);
 
-     useEffect(() => {
-       setColor(shuffle(colors).pop());
-     }, []);
-
-
+  console.log(playlist);
 
   return (
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
@@ -53,16 +63,16 @@ const Center = () => {
       >
         <img
           className="h-44 w-44 shadow-2xl"
-          //   src={playlist?.images?.[0]?.url}
+          src={playlist?.images?.[0]?.url}
           alt=""
         />
         <div>
           <p>Playlist</p>
-          {/* <h1 className="text-2xl md:text-3xl xl:text-5xl"></h1> */}
+          <h1 className="text-2xl md:text-3xl xl:text-5xl">{playlist?.name}</h1>
         </div>
       </section>
     </div>
   );
-}
+};
 
-export default Center
+export default Center;

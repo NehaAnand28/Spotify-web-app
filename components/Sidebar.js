@@ -2,7 +2,9 @@ import React from 'react';
 import {HomeIcon,SearchIcon,LibraryIcon,PlusCircleIcon,RssIcon, HeartIcon} from '@heroicons/react/outline';
 import { signOut,useSession } from 'next-auth/react';
 import { useEffect, useState } from "react";
+import { playlistIdState } from "../atoms/playlistAtom";
 import useSpotify from "../hooks/useSpotify";
+import { useRecoilState } from 'recoil';
 
 
 
@@ -22,6 +24,8 @@ const Sidebar = () => {
 
 
   console.log(playlists);
+  console.log("You picked playlist >>>", playlistId);
+
   return (
     <div className="text-gray-500 p-5 text-sm border-r border-gray-500 overflow-y-scroll scrollbar-hide h-screen">
       <div className="space-y-4">
