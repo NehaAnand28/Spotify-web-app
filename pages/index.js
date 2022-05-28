@@ -11,7 +11,7 @@ const Home = () => {
         <title>Spotify-web-app</title>
       </Head>
 
-      <main>
+      <main className="flex">
        <Sidebar />
        <Center />
         {/* Center */}
