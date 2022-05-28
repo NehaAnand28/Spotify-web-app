@@ -5,6 +5,8 @@ import useSpotify from "../hooks/useSpotify";
 import { shuffle } from "lodash";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { playlistIdState, playlistState } from "../atoms/playlistAtom";
+import Songs from "./Songs";
+import { data } from "autoprefixer";
 import React from "react";
 
 const colors = [
@@ -43,7 +45,7 @@ const Center = () => {
     <div className="flex-grow h-screen overflow-y-scroll scrollbar-hide">
       <header className="absolute top-5 right-8">
         <div
-          className="flex items-center bg-red-300 space-x-3 opacity-90 hover:opacity-80
+          className="flex items-center bg-black space-x-3 opacity-90 hover:opacity-80
                 cursor-pointer rounded-full p-1 pr-2 text-white"
           onClick={signOut}
         >
@@ -71,6 +73,9 @@ const Center = () => {
           <h1 className="text-2xl md:text-3xl xl:text-5xl">{playlist?.name}</h1>
         </div>
       </section>
+      <div>
+        <Songs />
+      </div>
     </div>
   );
 };

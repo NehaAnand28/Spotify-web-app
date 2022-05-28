@@ -27,14 +27,14 @@ const Sidebar = () => {
   console.log("You picked playlist >>>", playlistId);
 
   return (
-    <div className="text-gray-500 p-5 text-sm border-r border-gray-500 overflow-y-scroll scrollbar-hide h-screen">
+    <div
+      className="text-gray-500 p-5 text-sm lg:text-sm border-r
+    border-gray-900 overflow-y-scroll scrollbar-hide h-screen sm:max-w-[12rem] lg:max-w-[15rem] hidden md:inline-flex"
+    >
       <div className="space-y-4">
-        <button
-          className="flex items-center space-x-2 hover:text-white"
-          onClick={() => signOut()}
-        >
+        <button className="flex items-center space-x-2 hover:text-white">
           <HomeIcon className="h-5 w-5" />
-          <p>Log Out</p>
+          <p>Home</p>
         </button>
         <button className="flex items-center space-x-2 hover:text-white">
           <SearchIcon className="h-5 w-5" />
@@ -45,21 +45,20 @@ const Sidebar = () => {
           <p>Your Library</p>
         </button>
         <hr className="border-t-[0.1px] border-gray-900" />
-
         <button className="flex items-center space-x-2 hover:text-white">
           <PlusCircleIcon className="h-5 w-5" />
           <p>Create Playlist</p>
         </button>
         <button className="flex items-center space-x-2 hover:text-white">
           <HeartIcon className="h-5 w-5" />
-          <p>Liked Songs</p>
+          <p>Your Library</p>
         </button>
         <button className="flex items-center space-x-2 hover:text-white">
           <RssIcon className="h-5 w-5" />
-          <p>Your episodes</p>
+          <p>Your Episodes</p>
         </button>
         <hr className="border-t-[0.1px] border-gray-900" />
-        {/* Playlists */}
+
         {/* {Playlists...} */}
         {playlists.map((playlist) => (
           <p

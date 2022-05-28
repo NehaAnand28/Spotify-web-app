@@ -2,7 +2,8 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Sidebar from '../components/Sidebar';
 import Center from "../components/Center";
-import styles from '../styles/Home.module.css'
+import styles from '../styles/Home.module.css';
+import { getSession } from "next-auth/react";
 
 const Home = () => {
   return (
@@ -21,5 +22,14 @@ const Home = () => {
     </div>
   );
 }
-
 export default Home;
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  return {
+    props: {
+      session,
+    },
+  };
+}
