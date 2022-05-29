@@ -1,7 +1,3 @@
-from flask import Flask, send_from_directory
-from flask_restful import Api, Resource, reqparse
-from flask_cors import CORS #comment this on deployment
-from api.GetRecommendations import GetRecommendations
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -13,21 +9,6 @@ import numpy as np
 from flask import request
 from dotenv import load_dotenv
 import os
-import spotifyPlaylist
-
-
-app = Flask(__name__, static_url_path='', static_folder='frontend/build')
-CORS(app) #comment this on deployment
-api = Api(app)
-
-@app.route("/", defaults={'path':''})
-def serve(path):
-    return send_from_directory(app.static_folder,'index.html')
-
-api.add_resource(GetRecommendations, '/flask/models')
-
-# ----------------------------------------------------------------------------
-
 
 load_dotenv()
 
@@ -35,33 +16,22 @@ client_id = os.environ.get('CLIENT_ID')
 client_secret = os.environ.get('CLIENT_SECRET')
 username = os.environ.get('USERNAME')
 
-#extended the scope to also modify non-public playlists
+#note that I extended the scope to also modify non-public playlists
 scope = "playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative"
 
 redirect_uri = "http://localhost:8888/callback"
 
 client_credentials_manager = SpotifyClientCredentials(client_id=client_id, 
                                                       client_secret=client_secret)
-
-# creating spotipy object
+                                                      
 sp = spotipy.Spotify(client_credentials_manager = client_credentials_manager)
-# receiving access token for session management
+
 token = util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
 if token:
     sp = spotipy.Spotify(auth=token)
 else:
     print("Can't get token for", username)
 
-# ----------------------------------------------------------------------------------
-
-@app.route('/create', methods=['GET','POST'])
-def create():
-    playlist_name = "Recommended for you"
-    playlist_description = "Recommended based on a existing playlist"
-    sp.user_playlist_create(user=username, name=playlist_name, public=True, collaborative=False, description=playlist_description)
-    return "created"
-
-@app.route('/generate',methods=['GET','POST'])
 def create_df_saved_songs(api_results):
     """
     Reads in the spotipy query results for user saved songs and returns a DataFrame with
@@ -73,7 +43,7 @@ def create_df_saved_songs(api_results):
     -------
     df: DataFrame containing track_name,track_id, artist,album,duration,popularity
     """
-
+    #create lists for df-columns
     track_name = []
     track_id = []
     artist = []
@@ -191,12 +161,18 @@ def append_audio_features(df,spotify_auth, return_feat_df = False):
     else:
         return df,df_features
 
-# spotify:playlist:37i9dQZF1E4s96jJgqDgvl -- structure of a playlist URI
+# https://open.spotify.com/playlist/37i9dQZF1E4s96jJgqDgvl
+# spotify:user:1185903410:playlist:6YAnJeVC7tgOiocOG23Dd
+# https://open.spotify.com/playlist/37i9dQZF1E4s96jJgqDgvl?si=878f71dac49f4540
+# https://open.spotify.com/playlist/2C3ABZoyALVPuv53S3Qr0x?si=c0023d2260884c78
+
+
+# spotify:playlist:37i9dQZF1E4s96jJgqDgvl
 
 #get the playlist data from the API
-playlist_uri = "spotify:playlist:37i9dQZF1E4s96jJgqDgvl" #generates recommendation based on this playlist
-api_playlist = sp.playlist(playlist_uri)
-playlist_df = create_df_playlist(api_playlist,sp = sp)
+playlist_uri = "spotify:playlist:37i9dQZF1E4s96jJgqDgvl"
+playlist = sp.playlist(playlist_uri)
+playlist_df = create_df_playlist(playlist,sp = sp)
 
 #get seed tracks for recommendations
 seed_tracks = playlist_df["track_id"].tolist()
@@ -251,8 +227,11 @@ final_recomms = final_recomms.drop_duplicates()
 final_recomms = final_recomms[~final_recomms["track_name"].isin(playlist_df["track_name"])]
 final_recomms.reset_index(drop = True, inplace = True)
 
-# newly generated playlist - "Recommended for you"
-new_playlist_uri = "spotify:playlist:7s3AtNb0SVYC15SzSR29oJ"
+#create a playlist
+playlist_name = "New Recommended"
+playlist_description = "Recommended based on a existing playlist"
+new_playlist_uri = "spotify:playlist:2mv3id18qnWT7PGDu5IOYF"
+
+# sp.user_playlist_create(user=username, name=playlist_name, public=True, collaborative=False, description=playlist_description)
 
 sp.user_playlist_add_tracks(username,playlist_id = new_playlist_uri,tracks = final_recomms["track_id"].tolist())
-

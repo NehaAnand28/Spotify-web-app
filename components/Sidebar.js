@@ -42,6 +42,49 @@ const Sidebar = () => {
       });
   }, []);
 
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:5000/create")
+  //     .then((response) => {
+  //       console.log("SUCCESS", response);
+  //       setGetMessage(response);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+
+  //     console.log("send playlist uri as " , playlistId);
+  // },);
+
+  const createPlaylist = () => {
+      axios
+      .get("http://localhost:5000/create")
+      .then((response) => {
+        console.log("SUCCESS", response);
+        setGetMessage(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      console.log("send playlist uri as " , playlistId);
+
+  }
+ 
+  const generateRecommendations = () => {
+    axios
+      .get("http://localhost:5000/generate")
+      .then((response) => {
+        console.log("SUCCESS", response);
+        setGetMessage(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      console.log("Songs added to Recommended for you");
+  }
+
   console.log(playlists);
   console.log("You picked playlist >>>", playlistId);
 
@@ -64,7 +107,8 @@ const Sidebar = () => {
           <p>Your Library</p>
         </button>
         <hr className="border-t-[0.1px] border-gray-900" />
-        <button className="flex items-center space-x-2 hover:text-white">
+        <button className="flex items-center space-x-2 hover:text-white"
+        onClick={() =>{createPlaylist()}}>
           <PlusCircleIcon className="h-5 w-5" />
           <p>Create Playlist</p>
         </button>
@@ -73,7 +117,8 @@ const Sidebar = () => {
           <p>Your Library</p>
         </button>
         {/* checking backend connection */}
-        <button className="flex items-center space-x-2 hover:text-white">
+        <button className="flex items-center space-x-2 hover:text-white" 
+        onClick={() => {generateRecommendations()}}>
           <RssIcon className="h-5 w-5" />
           {getMessage.status === 200 ? (
             <p>{getMessage.data.message}</p>
