@@ -85,7 +85,7 @@ const Sidebar = () => {
       console.log("Songs added to Recommended for you");
   }
 
-  console.log(playlists);
+  // console.log(playlists);
   console.log("You picked playlist >>>", playlistId);
 
   return (

@@ -161,11 +161,6 @@ def append_audio_features(df,spotify_auth, return_feat_df = False):
     else:
         return df,df_features
 
-# https://open.spotify.com/playlist/37i9dQZF1E4s96jJgqDgvl
-# spotify:user:1185903410:playlist:6YAnJeVC7tgOiocOG23Dd
-# https://open.spotify.com/playlist/37i9dQZF1E4s96jJgqDgvl?si=878f71dac49f4540
-# https://open.spotify.com/playlist/2C3ABZoyALVPuv53S3Qr0x?si=c0023d2260884c78
-
 
 # spotify:playlist:37i9dQZF1E4s96jJgqDgvl
 
